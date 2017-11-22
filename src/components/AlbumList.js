@@ -1,22 +1,32 @@
 import React,{Component} from 'react';
-import {View,Text} from 'react-native';
+import {View,Text,ScrollView} from 'react-native';
+import AlbumDetails from './AlbumDetails';
 
 export default class AlbumList extends Component{
+  state ={
+    albums:[]
+  };
 
   componentWillMount(){
     console.log('componentwillMOunt called');
-    // fetch('https://rallycoding.herokuapp.com/api/music_albums').then(function(response){
-    //   console.log(response);
-    // }).catch(function(error){
-    //   console.error(error);
-    // })
+    fetch('https://rallycoding.herokuapp.com/api/music_albums').then(response =>response.json())
+      .then(data =>{
+        this.setState({
+          albums:data
+        })
+      }).catch(console.error);
   }
-
+renderAlbums(){
+  return this.state.albums.map(album =>
+    <AlbumDetails key={album.title} album={album} />
+  );
+}
   render(){
+    console.log(this.state.albums)
       return(
-        <View>
-          <Text> Album List Native</Text>
-        </View>
+        <ScrollView>
+          {this.renderAlbums()}
+        </ScrollView>
       );
     };
 }
